@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--script src="https://unpkg.com/vue@next"></script-->
+    <script src="../static/js/vue.global.js"></script>
+    <style>
+        .class1{
+            background: pink;
+            color: darkgreen;
+        }
+        .class2{
+            background: purple;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <img style="width:180px" src="data:;base64,{{img_stream}}" />
+    <div id="app" class="demo">
+        <label for="r1">change color</label><input type="checkbox" v-model="use" id="r1">
+        <br><br>
+        <div v-bind:class="{'class2':use}">
+            v-bind class
+        </div>
+        <input v-model="mes"><br>
+        <input type="text" id="res">
+        <br>
+        <button v-on:click="assign">submit</button>
+        <button v-on:click="reverse">reverse</button>
+        <br>
+        changed <p>{{ res1 }}</p>
+    </div>
+
+    <script>
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    use: true,
+                    mes: 'input!',
+                    res1: ''
+                }
+            },
+            methods: {
+                reverse() {
+                    this.res1 = this.res1
+                        .split('')
+                        .reverse()
+                        .join('')
+                },
+                assign() {
+                    this.res1 = document.getElementById('res').value
+                }
+            }
+        })
+        vm = app.mount('#app')
+    </script>
+</body>
+</html>

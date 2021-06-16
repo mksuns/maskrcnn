@@ -1,0 +1,242 @@
+<!--
+ * @Author       : zhxf
+ * @Date         : 2020-09-16 11:06:26
+ * @LastEditors  : zhxf
+ * @LastEditTime : 2020-09-25 09:20:53
+ * @Description  : file content
+ * @FilePath     : \k_graph-echarts\index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+        <script src="../static/js/echarts.min.js"></script>
+		<!--<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.js"></script>-->
+		<script src="../static/js/data.js"></script>
+        <script src="../static/js/jquery-1.11.2.min.js"></script>
+	</head>
+	<body>
+		<div>
+			<input type="text" name="wd" id="search" value=""/>
+			<button class="btn" onClick="search()">搜索</button>
+			<button class="btn" onClick="backToInit()">回到原点</button>
+		</div>
+
+		<div id="main" style="width: 1200px; height: 500px"></div>
+		<script type="text/javascript">
+			var categories = [
+				{name:"诊断"},
+                {name:"用药"},
+                {name:"症状"},
+                {name:"身体部位"},
+                {name:"检查检验"}
+			];
+			// 基于准备好的dom，初始化echarts实例
+			var myChart = echarts.init(document.getElementById("main"));
+
+			// 指定图表的配置项和数据
+			var option = {
+				/* color: [
+					"#3c90f7",
+					"#55bfc0",
+					"#5ebe67",
+					"#f4cd49",
+					"#e05667",
+					"#7c4bd8",
+					"#ac33c1",
+					"#a5d637",
+					"#ff5733",
+					"#ff9f26",
+				], */
+				title: {
+					text: "知识图谱",
+					subtext: "Default layout",
+					top: "bottom",
+					left: "right",
+				},
+				tooltip: {},
+				legend: [
+					{
+						// selectedMode: 'single',
+						data: categories.map(function (a) {
+							return a.name;
+						}),
+						type: "scroll",
+						orient: "vertical",
+						right: 0,
+						// top: 20,
+						bottom: 100,
+						icon: "circle",
+					},
+				],
+				toolbox: {
+					show: true,
+					feature: {
+						myTool: {
+							show: true,
+							icon:
+								"path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891",
+							title: "回到原点",
+							onclick: function () {
+								backToInit();
+							},
+						},
+					},
+				},
+				animationDuration: 1500,
+				animationEasingUpdate: "quinticInOut",
+				series: [
+					{
+						name: "知识图谱",
+						type: "graph",
+						layout: "force", //none circular force
+						data: graph.nodes,
+						links: graph.links,
+						categories: categories,
+						roam: true,
+						focusNodeAdjacency: true,
+						itemStyle: {
+							borderColor: "#fff",
+							borderWidth: 1,
+							shadowBlur: 10,
+							shadowColor: "rgba(0, 0, 0, 0.3)",
+						},
+						label: {
+							show: true,
+							position: "right",
+							formatter: "{b}",
+						},
+						lineStyle: {
+							color: "source",
+							curveness: 0.3,
+						},
+						emphasis: {
+							lineStyle: {
+								width: 2,
+							},
+						},
+						legendHoverLink: false,
+						roam: false, //缩放
+						force: {
+							repulsion: 300,
+							// gravity: 0.5, //节点受到的向中心的引力因子。该值越大节点越往中心点靠拢。
+							edgeLength: 100, //边的两个节点之间的距离，这个距离也会受 repulsion。
+							// layoutAnimation: true,
+							// initLayout: "circular",
+						},
+					},
+				],
+			};
+			// 使用刚指定的配置项和数据显示图表。
+			myChart.setOption(option);
+
+			myChart.on("click", function (params) {
+				var arrayIndex = params.dataIndex;
+				if (params.dataType == "node") {
+					option.series[0].data = [
+						{
+							id: "0",
+							name: "Myriel",
+							itemStyle: null,
+							symbolSize: 19.12381,
+							x: -266.82776,
+							y: 299.6904,
+							attributes: {
+								modularity_class: 0,
+							},
+							value: 28.685715,
+							label: {
+								show: false,
+							},
+							category: 0,
+						},
+						{
+							id: "1",
+							name: "Napoleon",
+							itemStyle: null,
+							symbolSize: 2.6666666666666665,
+							x: -418.08344,
+							y: 446.8853,
+							attributes: {
+								modularity_class: 0,
+							},
+							value: 4,
+							label: {
+								show: false,
+							},
+							category: 0,
+						},
+					];
+					myChart.setOption(option, true);
+				}
+			});
+
+			function backToInit() {
+				option.series[0].data = graph.nodes;
+				myChart.setOption(option, true);
+			}
+
+			function search() {
+			    var request = {}
+			    request["input"] = $('#search').val()
+			    $.ajax({
+                    type: 'POST',
+                    url: '/data',
+                    dataType: 'json',
+                    contentType:'application/json;charset=UTF-8',
+		            data:JSON.stringify(request),
+                    success: function (data) {
+                        console.log(option.series[0].categories)
+                        option.series[0].data = data.nodes
+                        option.series[0].links = data.links
+                        //option.series[0].categories = data.categories
+                        //console.log(option.series[0].data)
+                        //console.log(option.series[0].data)
+                        console.log(option.series[0].categories)
+                        myChart.setOption(option, true)
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThown) {
+                        alert("操作失败！");
+                    }
+                })
+				{#option.series[0].data = [#}
+				{#	{#}
+				{#		id: "0",#}
+				{#		name: "Myriel",#}
+				{#		itemStyle: null,#}
+				{#		symbolSize: 19.12381,#}
+				{#		x: -266.82776,#}
+				{#		y: 299.6904,#}
+				{#		attributes: {#}
+				{#			modularity_class: 0,#}
+				{#		},#}
+				{#		value: 28.685715,#}
+				{#		label: {#}
+				{#			show: false,#}
+				{#		},#}
+				{#		category: 0,#}
+				{#	},#}
+				{#	{#}
+				{#		id: "1",#}
+				{#		name: "Napoleon",#}
+				{#		itemStyle: null,#}
+				{#		symbolSize: 2.6666666666666665,#}
+				{#		x: -418.08344,#}
+				{#		y: 446.8853,#}
+				{#		attributes: {#}
+				{#			modularity_class: 0,#}
+				{#		},#}
+				{#		value: 4,#}
+				{#		label: {#}
+				{#			show: false,#}
+				{#		},#}
+				{#		category: 0,#}
+				{#	},#}
+				{#];#}
+				{#myChart.setOption(option, true);#}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Object Detection</title>
+    <script src="../static/js/vue.js"></script>
+  </head>
+  <body>
+    <div>
+      <input type="image" id="detect" />
+      <button class="btn" onclick="detect()">检测</button>
+    </div>
+
+    <script>
+      function detect() {
+        var that = this;
+
+        axios({
+          method: "get",
+          url: "http://127.0.0.1:5000/detect",
+          responseType: "arraybuffer",
+        }).then(function (response) {
+          that.picurl =
+            "data:image/jpeg;base64," + that.arrayBufferToBase64(response.data);
+        });
+      };
+    </script>
+  </body>
+</html>
